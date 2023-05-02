@@ -5,8 +5,7 @@ import (
 	"gin-shop/controller"
 	"gin-shop/middlewares"
 	"gin-shop/settings"
-	"gin-shop/settings/mysql"
-	"gin-shop/settings/redis"
+	"gin-shop/settings/db"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"log"
@@ -22,13 +21,19 @@ func main() {
 	}
 
 	// 2.初始化Mysql
-	if err := mysql.InitMysql(); err != nil {
+	if err := db.InitMysql(); err != nil {
 		log.Fatal(err.Error())
 		return
 	}
 
 	// 3.初始化Redis
-	if err := redis.InitRedis(); err != nil {
+	if err := db.InitRedis(); err != nil {
+		log.Fatal(err.Error())
+		return
+	}
+
+	// 3.初始化Minio
+	if err := db.InitMinio(); err != nil {
 		log.Fatal(err.Error())
 		return
 	}

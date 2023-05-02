@@ -6,6 +6,8 @@ import (
 	"gin-shop/service"
 	"gin-shop/utils"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"strings"
 )
 
 type UserController struct {
@@ -21,11 +23,30 @@ func (u *UserController) Register(router *gin.Engine) {
 func uploadAvatar(c *gin.Context) {
 	// 解析上传的参数：file，user_id
 	userId, _ := c.Get("id")
-
+	file, err := c.FormFile("avatar")
+	if err != nil {
+		utils.Fail(c, "图片上传失败，请重新上传")
+		return
+	}
 	// 保存文件到本地
+	uuid, _ := uuid.NewRandom()
+	fileType := file.Filename[strings.LastIndex(file.Filename, "."):]
+	fileName := uuid.String() + fileType
+	localPath := "./upload/" + fileName
 
+	err = c.SaveUploadedFile(file, localPath)
+	if err != nil {
+		utils.Fail(c, "图片保存失败，请重新上传")
+		return
+	}
 	// 保存文件路径到用户表的头像字段
+	minioPath, err, flag := userService.SaveAvatar(userId.(int64), c, fileType, fileName, localPath)
 
+	if err == nil && flag {
+		utils.Ok(c, minioPath)
+	} else {
+		utils.Fail(c, "图片保存失败，请重新上传")
+	}
 }
 
 // 生成验证码

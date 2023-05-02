@@ -1,4 +1,4 @@
-package mysql
+package db
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-var DB *gorm.DB
+var Mysql *gorm.DB
 
 func InitMysql() (err error) {
 	username := viper.GetString("mysql.username")
@@ -31,7 +31,7 @@ func InitMysql() (err error) {
 
 	connectURL := username + ":" + password + "@tcp(" + url + ")/" + database
 	fmt.Println(connectURL)
-	DB, err = gorm.Open(mysql.Open(connectURL+"?charset=utf8mb4"), &gorm.Config{Logger: customLog})
+	Mysql, err = gorm.Open(mysql.Open(connectURL+"?charset=utf8mb4"), &gorm.Config{Logger: customLog})
 
 	return err
 }
