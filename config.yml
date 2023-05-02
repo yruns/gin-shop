@@ -1,0 +1,22 @@
+app:
+  name: could_restaurant
+  version: 1.0.0
+  mode: development
+  port: 8090
+
+jwt:
+  secret: "&*NS@!*U72$%"
+  expire: 3600
+
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  username: root
+  password: root
+  database: cloud_shop
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password: ""
+  database: 0
