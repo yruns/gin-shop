@@ -1,4 +1,4 @@
-package userDao
+package dao
 
 import (
 	"gin-shop/model"

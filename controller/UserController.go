@@ -3,10 +3,11 @@ package controller
 import (
 	"gin-shop/middlewares"
 	"gin-shop/request"
-	"gin-shop/service"
+	service "gin-shop/service"
 	"gin-shop/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/sirupsen/logrus"
 	"strings"
 )
 
@@ -25,6 +26,7 @@ func uploadAvatar(c *gin.Context) {
 	userId, _ := c.Get("id")
 	file, err := c.FormFile("avatar")
 	if err != nil {
+		logrus.Error(err.Error())
 		utils.Fail(c, "图片上传失败，请重新上传")
 		return
 	}
@@ -36,15 +38,17 @@ func uploadAvatar(c *gin.Context) {
 
 	err = c.SaveUploadedFile(file, localPath)
 	if err != nil {
+		logrus.Error(err.Error())
 		utils.Fail(c, "图片保存失败，请重新上传")
 		return
 	}
 	// 保存文件路径到用户表的头像字段
-	minioPath, err, flag := userService.SaveAvatar(userId.(int64), c, fileType, fileName, localPath)
+	minioPath, err, flag := service.SaveAvatar(userId.(int64), c, fileType, fileName, localPath)
 
 	if err == nil && flag {
 		utils.Ok(c, minioPath)
 	} else {
+		logrus.Error(err.Error())
 		utils.Fail(c, "图片保存失败，请重新上传")
 	}
 }
@@ -68,7 +72,7 @@ func login(c *gin.Context) {
 	// 判断验证码，暂不处理该逻辑
 
 	// 判断用户名和密码
-	user := userService.Login(loginRequest)
+	user := service.Login(loginRequest)
 
 	// 返回结果
 	if user.Id == 0 {

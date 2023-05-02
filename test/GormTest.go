@@ -14,6 +14,7 @@ func main() {
 	}
 
 	// 生成表时指定表名
-	db.Table("user").AutoMigrate(&model.UserBasic{})
+	//db.Table("food_category").AutoMigrate(&model.FoodCategory{})
+	db.Table("shop").AutoMigrate(&model.Shop{})
 
 }

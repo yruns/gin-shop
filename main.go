@@ -53,6 +53,8 @@ func main() {
 // 注册路由
 func registerRouter(router *gin.Engine) {
 	new(controller.UserController).Register(router)
+	new(controller.FoodCategoryController).Register(router)
+	new(controller.ShopController).Register(router)
 }
 
 // Cors 设置跨域访问
